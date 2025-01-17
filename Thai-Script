@@ -110,7 +110,7 @@ end
 
 -- ปุ่มสำหรับเปิด/ปิดสคริปต์
 Tab:CreateButton({
-    Name = "Kill aura เปิด/ปิดสคริปต์",
+    Name = "เปิด/ปิดสคริปต์",
     Callback = toggle
 })
 
@@ -214,7 +214,7 @@ end
 
 -- ผูกการเปิด/ปิดกับปุ่ม UI
 Tab:CreateToggle({
-    Name = "เปิด/ปิดสคริปต์",
+    Name = "Kill aura เปิด/ปิดสคริปต์",
     CurrentValue = false,
     Flag = "DamageToggle", -- ธงสำหรับบันทึกสถานะ
     Callback = function(Value)
