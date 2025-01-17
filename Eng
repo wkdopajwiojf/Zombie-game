@@ -1,0 +1,365 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Zombie game [upd3] Script🤡",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Zombie game [upd3]",
+   LoadingSubtitle = "Script By Arisa Mihai",
+   Theme = "Serenity", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = Arisa, -- Create a custom folder for your hub/game
+      FileName = "ควย" -- "Cock" (slang)
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local Tab = Window:CreateTab("Fuck me💦", nil) -- "F**k me"
+local Section = Tab:CreateSection("Idk funtion") -- "I don't know the function, I don't want to name it"
+
+-- Starting values
+local radius = 3
+local numShots = 10
+local maxRadius = 1000
+local maxNumShots = 10000
+
+-- Slider for range
+local RadiusSlider = Tab:CreateSlider({
+    Name = "Control Range",
+    Range = {1, maxRadius},
+    Increment = 1,
+    Suffix = "Range",
+    CurrentValue = radius,
+    Flag = "RadiusSlider",
+    Callback = function(Value)
+        radius = Value
+    end,
+})
+
+-- Slider for number of shots
+local ShotsSlider = Tab:CreateSlider({
+    Name = "Number of Shots",
+    Range = {1, maxNumShots},
+    Increment = 1,
+    Suffix = "Shots",
+    CurrentValue = numShots,
+    Flag = "ShotsSlider",
+    Callback = function(Value)
+        numShots = Value
+    end,
+})
+
+local enabled = false
+
+local function updateScriptPosition()
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+    local angleStep = math.pi * 2 / numShots
+    for i = 0, numShots - 1 do
+        local angle = angleStep * i
+        local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
+        local targetPosition = humanoidRootPart.Position + offset
+
+        local args = {
+            [1] = targetPosition,
+            [2] = targetPosition + Vector3.new(0, 0, 0)
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("AcidSpit"):FireServer(unpack(args))
+    end
+end
+
+local function toggle()
+    enabled = not enabled
+    if enabled then
+        Rayfield:Notify({
+            Title = "Script Activated",
+            Content = "The script is running!",
+            Duration = 3
+        })
+    else
+        Rayfield:Notify({
+            Title = "Script Deactivated",
+            Content = "The script has been turned off!",
+            Duration = 3
+        })
+    end
+end
+
+-- Button to toggle script on/off
+Tab:CreateButton({
+    Name = "Toggle Script",
+    Callback = toggle
+})
+
+-- Loop to update and shoot
+task.spawn(function()
+    while true do
+        if enabled then
+            updateScriptPosition()
+        end
+        task.wait(2)
+    end
+end)
+
+local Section = Tab:CreateSection("Idk funtion Ver.2") -- "I don't know the function, I don't want to name it round two"
+
+-- Toggle State
+local enabled = false
+
+-- Main Function to damage all entities in range
+local function damageNearbyEntities()
+    local livingThings = workspace:FindFirstChild("LivingThings")
+    if not livingThings then
+        warn("LivingThings folder not found in workspace!")
+        return
+    end
+
+    -- Get the player's character and position
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local playerPosition = character:WaitForChild("HumanoidRootPart").Position
+
+    local args = {}
+    local anyEntitiesInRange = false
+
+    -- Check all objects in LivingThings (e.g., Zombies and other Players)
+    for _, obj in pairs(livingThings:GetChildren()) do
+        -- Skip if the object is a "HumanNpc" or is the LocalPlayer
+        if obj.Name == "HumanNpc" or obj == player.Character then
+            continue
+        end
+
+        -- Make sure the object has a Head and it still exists in the game
+        if obj:FindFirstChild("Head") and obj.Head.Parent then
+            local objectPosition = obj.Head.Position
+            if (playerPosition - objectPosition).Magnitude <= 5 then
+                table.insert(args, obj.Head)  -- Add to the list of targets
+                anyEntitiesInRange = true
+                print("Attacking: " .. obj.Name)  -- Print the name of the object being attacked
+            end
+        end
+    end
+
+    -- Check all other players (not the local player)
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player then
+            local otherCharacter = otherPlayer.Character
+            if otherCharacter and otherCharacter:FindFirstChild("HumanoidRootPart") then
+                local otherPosition = otherCharacter.HumanoidRootPart.Position
+                if (playerPosition - otherPosition).Magnitude <= 5 then
+                    local head = otherCharacter:FindFirstChild("Head")
+                    if head then
+                        table.insert(args, head)  -- Add to the list of targets
+                        anyEntitiesInRange = true
+                        print("Attacking: " .. otherPlayer.Name)  -- Print the player's name being attacked
+                    end
+                end
+            end
+        end
+    end
+
+    -- If there are any valid targets, damage them all
+    if #args > 0 then
+        local success, errorMessage = pcall(function()
+            -- Send damage to all targets at once
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Melee"):WaitForChild("Damage"):InvokeServer(unpack(args))
+        end)
+        if not success then
+            warn("Error invoking server: " .. errorMessage)
+        end
+    end
+end
+
+-- Toggle On/Off function for UI
+local function toggle()
+    if enabled then
+        Rayfield:Notify({
+            Title = "Script Activated",
+            Content = "Damage Script is now active!",
+            Duration = 3,
+            Image = 4483362458,
+        })
+    else
+        Rayfield:Notify({
+            Title = "Script Deactivated",
+            Content = "Damage Script has been deactivated!",
+            Duration = 3,
+            Image = 4483362458,
+        })
+    end
+end
+
+-- Bind Toggle to UI Button
+Tab:CreateToggle({
+    Name = "Kill aura On/Off",
+    CurrentValue = false,
+    Flag = "DamageToggle", -- Flag for saving toggle state
+    Callback = function(Value)
+        enabled = Value
+        toggle()  -- Trigger notification when toggle is pressed
+    end
+})
+
+-- Damage Loop with 0.1s interval, only runs when enabled is true
+task.spawn(function()
+    while true do
+        if enabled then
+            damageNearbyEntities()  -- Execute the damage function for all targets
+        end
+        task.wait(0.1) -- Wait 0.1 seconds before running again
+    end
+end)
+
+local Tab = Window:CreateTab("Item Giver🔫", nil) -- "Spawn Items"
+local Section = Tab:CreateSection("Spawn Cool Items")
+local Button = Tab:CreateButton({
+   Name = "Wooden Bat",
+   Callback = function()
+   local args = {
+    [1] = "Wooden Bat"
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Katana",
+   Callback = function()
+   local args = {
+    [1] = "Katana"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Frying Pan",
+   Callback = function()
+   local args = {
+    [1] = "Frying Pan"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Fire Axe",
+   Callback = function()
+   local args = {
+    [1] = "Fire Axe"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Machete",
+   Callback = function()
+   local args = {
+    [1] = "Machete"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Pizza Sword",
+   Callback = function()
+   local args = {
+    [1] = "Pizza Sword"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Shovel",
+   Callback = function()
+   local args = {
+    [1] = "Shovel"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Classic Sword",
+   Callback = function()
+   local args = {
+    [1] = "Classic Sword"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Sniper",
+   Callback = function()
+   local args = {
+    [1] = "Sniper"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Landmine(Fixing)",
+   Callback = function()
+   local args = {
+    [1] = "Land mine"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+
+-- สร้าง Tab สำหรับ Language
+local Tab = Window:CreateTab("Language🔠", nil) -- "Language"
+local Section = Tab:CreateSection("Language") -- "Language"
+
+local Button = Tab:CreateButton({
+   Name = "Thai Language",
+   Callback = function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/wkdopajwiojf/Zombie-game/refs/heads/main/Thai-Script"))()
+   end  -- ปิด Callback
+})  -- ปิด Button
+
+Rayfield:Notify({
+   Title = "Hello",
+   Content = "Thank you for using it",
+   Duration = 6.5,
+   Image = 4483362458,
+})
