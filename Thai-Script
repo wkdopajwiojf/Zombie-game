@@ -326,6 +326,28 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
+   Name = "ดาบกระดูก",
+   Callback = function()
+   local args = {
+    [1] = "Bone Sword"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "ขรไม้ซอมบี้",
+   Callback = function()
+   local args = {
+    [1] = "Zombie Club"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
    Name = "สไนเปอร์",
    Callback = function()
    local args = {
