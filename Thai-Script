@@ -352,7 +352,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
 local Tab = Window:CreateTab("ภาษา🔠", nil) -- Title, Image
 local Section = Tab:CreateSection("ภาษา")
 local Button = Tab:CreateButton({
-   Name = "Button Example",
+   Name = "English language",
    Callback = function()
       loadstring(game:HttpGet("https://raw.githubusercontent.com/wkdopajwiojf/Zombie-game/refs/heads/main/Eng"))()
    end,
