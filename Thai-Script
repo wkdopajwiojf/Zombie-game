@@ -343,7 +343,7 @@ local Button = Tab:CreateButton({
     [1] = "Landmine"
 }
 
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
 
    end,
 })
