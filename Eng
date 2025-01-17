@@ -335,6 +335,17 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
+   Name = "Charged Bat",
+   Callback = function()
+   local args = {
+    [1] = "Charged Bat"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
    Name = "firekatana",
    Callback = function()
    local args = {
