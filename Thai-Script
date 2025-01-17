@@ -1,0 +1,360 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Zombie game [upd3] Script🤡",
+   Icon = 0, -- ไอคอนที่แสดงบนแถบบน ใช้ Lucide Icons (string) หรือ Roblox Image (number) ถ้าไม่ต้องการไอคอนให้ตั้งค่าเป็น 0 (ค่าเริ่มต้น)
+   LoadingTitle = "Zombie game [upd3]",
+   LoadingSubtitle = "Script By Arisa Mihai",
+   Theme = "Serenity", -- ดูธีมเพิ่มเติมที่ https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- ปิดการแจ้งเตือนเมื่อสคริปต์มีปัญหากับอินเทอร์เฟซ
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = Arisa, -- สร้างโฟลเดอร์สำหรับเกม/ฮับ
+      FileName = "ควย"
+   },
+
+   Discord = {
+      Enabled = false, -- แสดงหน้าต่างเชิญเข้าดิสคอร์ดถ้าตัวรันรองรับ
+      Invite = "noinvitelink", -- ลิงก์เชิญดิสคอร์ด (ใส่เฉพาะโค้ด เช่น discord.gg/ABCD ให้ใส่แค่ ABCD)
+      RememberJoins = true -- ตั้งค่าเป็น false เพื่อให้ต้องเข้าดิสคอร์ดทุกครั้งที่โหลด
+   },
+
+   KeySystem = false, -- เปิดใช้งานระบบคีย์ (true) หรือปิด (false)
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "ระบบคีย์",
+      Note = "ไม่มีวิธีการรับคีย์ที่ให้ไว้", -- ใช้เพื่อบอกผู้ใช้ว่าจะรับคีย์ได้อย่างไร
+      FileName = "Key", -- แนะนำให้ตั้งชื่อไฟล์เฉพาะตัวเพื่อป้องกันการเขียนทับจากสคริปต์อื่น
+      SaveKey = true, -- บันทึกคีย์ของผู้ใช้ แต่ถ้าคีย์เปลี่ยนจะใช้ไม่ได้
+      GrabKeyFromSite = false, -- ถ้าตั้งค่าเป็น true ให้ตั้ง Key ด้านล่างเป็นลิงก์ RAW ของคีย์
+      Key = {"Hello"} -- รายการคีย์ที่รับได้ อาจเป็นลิงก์ RAW (pastebin, github) หรือข้อความง่ายๆ ("hello","key22")
+   }
+})
+
+local Tab = Window:CreateTab("เย็ดหีหนูหน่อยค่ะ💦", nil) -- หัวข้อและรูปภาพ
+local Section = Tab:CreateSection("ฟังชั่นอะไรไม่รู้ไม่อยากตั้งชื่อ")
+
+-- ค่าเริ่มต้น
+local radius = 3
+local numShots = 10
+local maxRadius = 1000
+local maxNumShots = 10000
+
+-- ตัวเลื่อนสำหรับระยะ
+local RadiusSlider = Tab:CreateSlider({
+    Name = "ควบคุมระยะ",
+    Range = {1, maxRadius},
+    Increment = 1,
+    Suffix = "ระยะ",
+    CurrentValue = radius,
+    Flag = "RadiusSlider",
+    Callback = function(Value)
+        radius = Value
+    end,
+})
+
+-- ตัวเลื่อนสำหรับจำนวนการยิง
+local ShotsSlider = Tab:CreateSlider({
+    Name = "จำนวนการยิง",
+    Range = {1, maxNumShots},
+    Increment = 1,
+    Suffix = "ครั้ง",
+    CurrentValue = numShots,
+    Flag = "ShotsSlider",
+    Callback = function(Value)
+        numShots = Value
+    end,
+})
+
+local enabled = false
+
+local function updateScriptPosition()
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+    local angleStep = math.pi * 2 / numShots
+    for i = 0, numShots - 1 do
+        local angle = angleStep * i
+        local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
+        local targetPosition = humanoidRootPart.Position + offset
+
+        local args = {
+            [1] = targetPosition,
+            [2] = targetPosition + Vector3.new(0, 0, 0)
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("AcidSpit"):FireServer(unpack(args))
+    end
+end
+
+local function toggle()
+    enabled = not enabled
+    if enabled then
+        Rayfield:Notify({
+            Title = "สคริปต์เปิดใช้งาน",
+            Content = "สคริปต์กำลังทำงานอยู่!",
+            Duration = 3
+        })
+    else
+        Rayfield:Notify({
+            Title = "สคริปต์ปิดใช้งาน",
+            Content = "สคริปต์ถูกปิดแล้ว!",
+            Duration = 3
+        })
+    end
+end
+
+-- ปุ่มสำหรับเปิด/ปิดสคริปต์
+Tab:CreateButton({
+    Name = "Kill aura เปิด/ปิดสคริปต์",
+    Callback = toggle
+})
+
+-- ลูปสำหรับอัปเดตและการยิง
+task.spawn(function()
+    while true do
+        if enabled then
+            updateScriptPosition()
+        end
+        task.wait(2)
+    end
+end)
+
+local Section = Tab:CreateSection("ฟังชั่นอะไรไม่รู้ไม่อยากตั้งชื่อรอบสอง")
+
+-- สถานะการเปิด/ปิด
+local enabled = false
+
+-- ฟังก์ชันหลักสำหรับโจมตีสิ่งมีชีวิตในระยะ
+local function damageNearbyEntities()
+    local livingThings = workspace:FindFirstChild("LivingThings")
+    if not livingThings then
+        warn("ไม่พบโฟลเดอร์ LivingThings ใน workspace!")
+        return
+    end
+
+    -- รับตัวละครและตำแหน่งของผู้เล่น
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local playerPosition = character:WaitForChild("HumanoidRootPart").Position
+
+    local args = {}
+    local anyEntitiesInRange = false
+
+    -- ตรวจสอบสิ่งมีชีวิตทั้งหมดใน LivingThings (เช่น ซอมบี้และผู้เล่นอื่น)
+    for _, obj in pairs(livingThings:GetChildren()) do
+        -- ข้ามถ้าเป็น "HumanNpc" หรือเป็น LocalPlayer
+        if obj.Name == "HumanNpc" or obj == player.Character then
+            continue
+        end
+
+        -- ตรวจสอบว่า obj มีส่วน Head และยังคงอยู่ในเกม
+        if obj:FindFirstChild("Head") and obj.Head.Parent then
+            local objectPosition = obj.Head.Position
+            if (playerPosition - objectPosition).Magnitude <= 5 then
+                table.insert(args, obj.Head)  -- เพิ่มในรายการเป้าหมาย
+                anyEntitiesInRange = true
+                print("โจมตี: " .. obj.Name)  -- พิมพ์ชื่อของเป้าหมายที่ถูกโจมตี
+            end
+        end
+    end
+
+    -- ตรวจสอบผู้เล่นอื่นทั้งหมด (ไม่ใช่ LocalPlayer)
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player then
+            local otherCharacter = otherPlayer.Character
+            if otherCharacter and otherCharacter:FindFirstChild("HumanoidRootPart") then
+                local otherPosition = otherCharacter.HumanoidRootPart.Position
+                if (playerPosition - otherPosition).Magnitude <= 5 then
+                    local head = otherCharacter:FindFirstChild("Head")
+                    if head then
+                        table.insert(args, head)  -- เพิ่มในรายการเป้าหมาย
+                        anyEntitiesInRange = true
+                        print("โจมตี: " .. otherPlayer.Name)  -- พิมพ์ชื่อผู้เล่นที่ถูกโจมตี
+                    end
+                end
+            end
+        end
+    end
+
+    -- ถ้ามีเป้าหมายที่โจมตีได้ ส่งความเสียหายไปทั้งหมด
+    if #args > 0 then
+        local success, errorMessage = pcall(function()
+            -- ส่งความเสียหายไปยังเป้าหมายทั้งหมด
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Melee"):WaitForChild("Damage"):InvokeServer(unpack(args))
+        end)
+        if not success then
+            warn("เกิดข้อผิดพลาดในการส่งข้อมูลไปยังเซิร์ฟเวอร์: " .. errorMessage)
+        end
+    end
+end
+
+-- ฟังก์ชันเปิด/ปิดจาก UI
+local function toggle()
+    if enabled then
+        Rayfield:Notify({
+            Title = "เปิดสคริปต์",
+            Content = "สคริปต์การโจมตีเปิดใช้งานแล้ว!",
+            Duration = 3,
+            Image = 4483362458,
+        })
+    else
+        Rayfield:Notify({
+            Title = "ปิดสคริปต์",
+            Content = "สคริปต์การโจมตีปิดการใช้งานแล้ว!",
+            Duration = 3,
+            Image = 4483362458,
+        })
+    end
+end
+
+-- ผูกการเปิด/ปิดกับปุ่ม UI
+Tab:CreateToggle({
+    Name = "เปิด/ปิดสคริปต์",
+    CurrentValue = false,
+    Flag = "DamageToggle", -- ธงสำหรับบันทึกสถานะ
+    Callback = function(Value)
+        enabled = Value
+        toggle()  -- แสดงการแจ้งเตือนเมื่อกดปุ่ม
+    end
+})
+
+-- ลูปการโจมตีทุก 0.1 วินาที ทำงานเฉพาะเมื่อ enabled เป็น true
+task.spawn(function()
+    while true do
+        if enabled then
+            damageNearbyEntities()  -- ทำงานฟังก์ชันโจมตีเป้าหมายทั้งหมด
+        end
+        task.wait(0.1) -- รอ 0.1 วินาทีก่อนทำงานใหม่
+    end
+end)
+
+local Tab = Window:CreateTab("เสกของ🔫", nil) -- หัวข้อและรูปภาพ
+local Section = Tab:CreateSection("เสกของตึงๆ")
+
+-- สร้างปุ่มสำหรับไอเท็มแต่ละชิ้น
+local Button = Tab:CreateButton({
+   Name = "ไม้เบสบอล",
+   Callback = function()
+   local args = {
+    [1] = "Wooden Bat"
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "ดาบคาตานะ",
+   Callback = function()
+   local args = {
+    [1] = "Katana"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "กระทะ",
+   Callback = function()
+   local args = {
+    [1] = "Frying Pan"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "ขวานไฟ",
+   Callback = function()
+   local args = {
+    [1] = "Fire Axe"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "มีดอีโต้",
+   Callback = function()
+   local args = {
+    [1] = "Machete"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "ดาบพิซซ่า",
+   Callback = function()
+   local args = {
+    [1] = "Pizza Sword"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "พลั่ว",
+   Callback = function()
+   local args = {
+    [1] = "Shovel"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "ดาบคลาสสิค",
+   Callback = function()
+   local args = {
+    [1] = "Classic Sword"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "สไนเปอร์",
+   Callback = function()
+   local args = {
+    [1] = "Sniper"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "กับระเบิด (กำลังแก้ไข)",
+   Callback = function()
+   local args = {
+    [1] = "Landmine"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("
+
+   end,
+})
+
+local Tab = Window:CreateTab("ภาษา🔠", nil) -- Title, Image
+local Section = Tab:CreateSection("ภาษา")
+
+
+Rayfield:Notify({
+   Title = "สวัสดี",
+   Content = "ขอบคุณที่ใช้งาน",
+   Duration = 6.5,
+   Image = 4483362458,
+})
