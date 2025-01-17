@@ -348,6 +348,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 
+
 local Tab = Window:CreateTab("ภาษา🔠", nil) -- Title, Image
 local Section = Tab:CreateSection("ภาษา")
 
