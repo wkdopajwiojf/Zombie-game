@@ -108,7 +108,7 @@ local function toggle()
     end
 end
 
--- ปุ่มสำหรับเปิด/ปิดสคริปต์
+-- ปุ่มสำหรับสคริปต์
 Tab:CreateButton({
     Name = "เปิด/ปิดสคริปต์",
     Callback = toggle
