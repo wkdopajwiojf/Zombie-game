@@ -337,6 +337,17 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
+   Name = "ดาบไฟ",
+   Callback = function()
+   local args = {
+    [1] = "firekatana"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
    Name = "ขรไม้ซอมบี้",
    Callback = function()
    local args = {
@@ -344,6 +355,13 @@ local Button = Tab:CreateButton({
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "ดาบมายคราฟ",
+   Callback = function()
+   local args = {[1] = "REWARD_IRON"}game:GetService("ReplicatedStorage"):WaitForChild("NetworkEvents"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
 
    end,
 })
