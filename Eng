@@ -439,7 +439,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "firekatana",
+   Name = "Firekatana",
    Callback = function()
    local args = {
     [1] = "firekatana"
@@ -464,6 +464,28 @@ local Button = Tab:CreateButton({
    Name = "Minecraft Sword",
    Callback = function()
    local args = {[1] = "REWARD_IRON"}game:GetService("ReplicatedStorage"):WaitForChild("NetworkEvents"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Flaming Bat",
+   Callback = function()
+   local args= {
+    [1] = "Flaming Bat"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "Frozen Bat",
+   Callback = function()
+   local args = {
+    [1] = "Frozen Bat"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
 
    end,
 })
