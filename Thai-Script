@@ -233,6 +233,14 @@ task.spawn(function()
     end
 end)
 
+local Section = Tab:CreateSection("ฟังชั่นอะไรไม่รู้ไม่อยากตั้งชื่อรอบสาม")
+local Button = Tab:CreateButton({
+   Name = "เสกซอมบี้",
+   Callback = function()
+      game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("Necro"):WaitForChild("AbilityPlayer"):FireServer()
+   end,
+})
+
 local Tab = Window:CreateTab("เสกของ🔫", nil) -- หัวข้อและรูปภาพ
 local Section = Tab:CreateSection("เสกของตึงๆ")
 
