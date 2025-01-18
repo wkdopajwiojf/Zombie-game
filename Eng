@@ -233,7 +233,7 @@ task.spawn(function()
     end
 end)
 
-local Section = Tab:CreateSection("ฟังชั่นอะไรไม่รู้ไม่อยากตั้งชื่อรอบสาม")
+local Section = Tab:CreateSection("Idk funtion Ver.3")
 local Button = Tab:CreateButton({
    Name = "Summon Zombie",
    Callback = function()
