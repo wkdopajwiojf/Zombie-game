@@ -233,6 +233,14 @@ task.spawn(function()
     end
 end)
 
+local Section = Tab:CreateSection("ฟังชั่นอะไรไม่รู้ไม่อยากตั้งชื่อรอบสาม")
+local Button = Tab:CreateButton({
+   Name = "Summon Zombie",
+   Callback = function()
+      game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("Necro"):WaitForChild("AbilityPlayer"):FireServer()
+   end,
+})
+
 local Tab = Window:CreateTab("Item Giver🔫", nil) -- "Spawn Items"
 local Section = Tab:CreateSection("Spawn Cool Items")
 local Button = Tab:CreateButton({
