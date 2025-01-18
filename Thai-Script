@@ -245,86 +245,99 @@ local Section = Tab:CreateSection("ฟังชั่นอะไรไม่ร
 local isProcessing = false  -- ตัวแปรเช็คว่าเรากำลังประมวลผลหรือไม่
 local remoteConnection = nil  -- ตัวแปรสำหรับเก็บการเชื่อมต่อ event
 
+local function createConnection()
+    -- ตรวจจับเมื่อ ReplicateBullet ทำงาน
+    remoteConnection = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Guns"):WaitForChild("ReplicateBullet").OnClientEvent:Connect(function(...)
+
+        -- ถ้าไม่กำลังประมวลผลการยิง Remote อยู่
+        if not isProcessing then
+            -- ตั้งสถานะเป็นกำลังประมวลผล
+            isProcessing = true
+            print("Fuck You")  -- เมื่อยิงไปที่ remote นี้ จะพิมพ์ว่า "เจอแล้ว"
+            
+            -- รันคำสั่งเพื่อเลือก Sniper
+            local args = {
+                [1] = "Sniper"
+            }
+
+            -- ส่งคำสั่งไปยัง server เพื่อให้เลือกอาวุธ Sniper
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+            -- หน่วงเวลา 0.1 วินาที เพื่อให้ Sniper ถูกเสกใหม่ใน Backpack
+            wait(0.1)
+
+            -- ตรวจจับ Sniper ที่ถูกเพิ่มเข้ามาใน Backpack ของ LocalPlayer
+            local player = game:GetService("Players").LocalPlayer
+            local backpack = player.Backpack
+
+            -- รอจนกว่า Sniper จะถูกเพิ่มเข้ามา
+            local sniper = backpack:WaitForChild("Sniper")
+
+            -- หน่วงเวลา 0.1 วินาที ก่อนย้าย Sniper
+            wait(0.1)
+
+            -- ย้าย Sniper ไปที่ LocalPlayer หรือตำแหน่งที่ต้องการ
+            sniper.Parent = player.Character  -- สามารถเปลี่ยนเป็นตำแหน่งที่คุณต้องการได้
+
+            print("Sniper")
+
+            -- ตั้งสถานะเป็นเสร็จสิ้นการประมวลผล
+            isProcessing = false
+        end
+    end)
+end
+
 local Toggle = Tab:CreateToggle({
-   Name = "Bypass Cooldown สไนเปอร์(กำลังพัฒนา)",  -- ชื่อ Toggle ที่จะแสดงใน UI
-   CurrentValue = false,  -- เริ่มต้น Toggle ปิด
-   Flag = "Toggle1",  -- Flag สำหรับการจัดการค่าต่างๆ ใน config file
-   Callback = function(Value)
-       if Value then
-           -- ถ้าเปิด Toggle
-           print("Toggle เปิดแล้ว")
-           
-           -- แสดง Notify เมื่อเปิด Toggle
-           Rayfield:Notify({
-               Title = "Toggle เปิด",
-               Content = "Sniper Action ถูกเปิดใช้งานแล้ว",
-               Duration = 3,  -- แสดง Notify 3 วินาที
-               Image = 4483362458,
-           })
-           
-           -- ถ้ายังไม่มีการเชื่อมต่อ event ก่อนหน้า
-           if remoteConnection == nil then
-               -- ตรวจจับเมื่อ ReplicateBullet ทำงาน
-               remoteConnection = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Guns"):WaitForChild("ReplicateBullet").OnClientEvent:Connect(function(...)
-
-                   -- ถ้าไม่กำลังประมวลผลการยิง Remote อยู่
-                   if not isProcessing then
-                       -- ตั้งสถานะเป็นกำลังประมวลผล
-                       isProcessing = true
-                       print("Fuck You")  -- เมื่อยิงไปที่ remote นี้ จะพิมพ์ว่า "เจอแล้ว"
-                       
-                       -- รันคำสั่งเพื่อเลือก Sniper
-                       local args = {
-                           [1] = "Sniper"
-                       }
-
-                       -- ส่งคำสั่งไปยัง server เพื่อให้เลือกอาวุธ Sniper
-                       game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
-
-                       -- หน่วงเวลา 0.1 วินาที เพื่อให้ Sniper ถูกเสกใหม่ใน Backpack
-                       wait(0.1)
-
-                       -- ตรวจจับ Sniper ที่ถูกเพิ่มเข้ามาใน Backpack ของ LocalPlayer
-                       local player = game:GetService("Players").LocalPlayer
-                       local backpack = player.Backpack
-
-                       -- รอจนกว่า Sniper จะถูกเพิ่มเข้ามา
-                       local sniper = backpack:WaitForChild("Sniper")
-
-                       -- หน่วงเวลา 0.1 วินาที ก่อนย้าย Sniper
-                       wait(0.1)
-
-                       -- ย้าย Sniper ไปที่ LocalPlayer หรือตำแหน่งที่ต้องการ
-                       sniper.Parent = player.Character  -- สามารถเปลี่ยนเป็นตำแหน่งที่คุณต้องการได้
-
-                       print("Sniper")
-
-                       -- ตั้งสถานะเป็นเสร็จสิ้นการประมวลผล
-                       isProcessing = false
-                   end
-               end)
-           end
-       else
-           -- ถ้าปิด Toggle
-           print("Toggle ปิดแล้ว")
-           
-           -- แสดง Notify เมื่อปิด Toggle
-           Rayfield:Notify({
-               Title = "Toggle ปิด",
-               Content = "Sniper Action ถูกปิดใช้งานแล้ว",
-               Duration = 3,  -- แสดง Notify 3 วินาที
-               Image = 4483362458,
-           })
-           
-           -- เมื่อปิด Toggle ให้หยุดการทำงานของ Remote โดยการ disconnect
-           if remoteConnection then
-               remoteConnection:Disconnect()  -- หยุดการเชื่อมต่อ Event
-               remoteConnection = nil  -- รีเซ็ตการเชื่อมต่อ
-               print("หยุดการเชื่อมต่อ Event ReplicateBullet")
-           end
-       end
-   end,
+    Name = "Bypass Cooldown สไนเปอร์(กำลังพัฒนา)",  -- ชื่อ Toggle ที่จะแสดงใน UI
+    CurrentValue = false,  -- เริ่มต้น Toggle ปิด
+    Flag = "Toggle1",  -- Flag สำหรับการจัดการค่าต่างๆ ใน config file
+    Callback = function(Value)
+        if Value then
+            -- ถ้าเปิด Toggle
+            print("Toggle เปิดแล้ว")
+            
+            -- แสดง Notify เมื่อเปิด Toggle
+            Rayfield:Notify({
+                Title = "Toggle เปิด",
+                Content = "Sniper Action ถูกเปิดใช้งานแล้ว",
+                Duration = 3,  -- แสดง Notify 3 วินาที
+                Image = 4483362458,
+            })
+            
+            -- ถ้ายังไม่มีการเชื่อมต่อ event ก่อนหน้า
+            if remoteConnection == nil then
+                createConnection()  -- สร้างการเชื่อมต่อ
+            end
+        else
+            -- ถ้าปิด Toggle
+            print("Toggle ปิดแล้ว")
+            
+            -- แสดง Notify เมื่อปิด Toggle
+            Rayfield:Notify({
+                Title = "Toggle ปิด",
+                Content = "Sniper Action ถูกปิดใช้งานแล้ว",
+                Duration = 3,  -- แสดง Notify 3 วินาที
+                Image = 4483362458,
+            })
+            
+            -- เมื่อปิด Toggle ให้หยุดการทำงานของ Remote โดยการ disconnect
+            if remoteConnection then
+                remoteConnection:Disconnect()  -- หยุดการเชื่อมต่อ Event
+                remoteConnection = nil  -- รีเซ็ตการเชื่อมต่อ
+                print("หยุดการเชื่อมต่อ Event ReplicateBullet")
+            end
+        end
+    end,
 })
+
+-- เมื่อเกิดใหม่ ให้รีเซ็ตการเชื่อมต่อ
+game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function()
+    if remoteConnection then
+        remoteConnection:Disconnect()  -- หยุดการเชื่อมต่อเก่า
+        remoteConnection = nil
+    end
+    createConnection()  -- สร้างการเชื่อมต่อใหม่
+end)
 
 local Tab = Window:CreateTab("เสกของ🔫", nil) -- หัวข้อและรูปภาพ
 local Section = Tab:CreateSection("เสกของตึงๆ")
