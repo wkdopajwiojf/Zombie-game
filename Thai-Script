@@ -677,7 +677,7 @@ local function toggle()
     if enabled then
         Rayfield:Notify({
             Title = "สคริปต์เปิดใช้งาน",
-            Content = "กำลังตรวจสอบและโจมตี Summon!",
+            Content = "สคริปต์การโจมตีเปิดการใช้งานแล้ว!",
             Duration = 6.5,
             Image = 4483362458,
         })
@@ -695,7 +695,7 @@ local function toggle()
     else
         Rayfield:Notify({
             Title = "สคริปต์ปิดใช้งาน",
-            Content = "สคริปต์หยุดทำงานแล้ว!",
+            Content = "สคริปต์การโจมตีปิดการใช้งานแล้ว!",
             Duration = 6.5,
             Image = 4483362458,
         })
