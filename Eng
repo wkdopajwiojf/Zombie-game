@@ -288,18 +288,18 @@ local function createConnection()
 end
 
 local Toggle = Tab:CreateToggle({
-    Name = "Bypass Cooldown สไนเปอร์(กำลังพัฒนา)",  -- ชื่อ Toggle ที่จะแสดงใน UI
+    Name = "Bypass Cooldown Sniper(Deving)",  -- ชื่อ Toggle ที่จะแสดงใน UI
     CurrentValue = false,  -- เริ่มต้น Toggle ปิด
     Flag = "Toggle1",  -- Flag สำหรับการจัดการค่าต่างๆ ใน config file
     Callback = function(Value)
         if Value then
             -- ถ้าเปิด Toggle
-            print("Toggle เปิดแล้ว")
+            print("Fuck You")
             
             -- แสดง Notify เมื่อเปิด Toggle
             Rayfield:Notify({
-                Title = "Toggle เปิด",
-                Content = "Sniper Action ถูกเปิดใช้งานแล้ว",
+                Title = "Script Activated",
+                Content = "Sniper Action Activated",
                 Duration = 3,  -- แสดง Notify 3 วินาที
                 Image = 4483362458,
             })
@@ -310,12 +310,12 @@ local Toggle = Tab:CreateToggle({
             end
         else
             -- ถ้าปิด Toggle
-            print("Toggle ปิดแล้ว")
+            print("Fuck You")
             
             -- แสดง Notify เมื่อปิด Toggle
             Rayfield:Notify({
-                Title = "Toggle ปิด",
-                Content = "Sniper Action ถูกปิดใช้งานแล้ว",
+                Title = "Sscript Deactivated",
+                Content = "Sniper Action Deactivated",
                 Duration = 3,  -- แสดง Notify 3 วินาที
                 Image = 4483362458,
             })
