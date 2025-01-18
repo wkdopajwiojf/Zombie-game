@@ -41,7 +41,7 @@ local Section = Tab:CreateSection("ฟังชั่นอะไรไม่ร
 local radius = 3
 local numShots = 10
 local maxRadius = 1000
-local maxNumShots = 10000
+local maxNumShots = 100000
 
 -- ตัวเลื่อนสำหรับระยะ
 local RadiusSlider = Tab:CreateSlider({
