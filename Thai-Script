@@ -570,6 +570,8 @@ local player = game.Players.LocalPlayer
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local livingThings = game.Workspace:WaitForChild("LivingThings")  -- โฟลเดอร์ LivingThings
 
+local enabled = false  -- ตัวแปรควบคุมการเปิด/ปิดสคริปต์
+
 -- ฟังก์ชันสำหรับสร้าง Part ที่ตำแหน่งและขนาดที่ต้องการ
 local function createPart()
     local part = Instance.new("Part")  -- สร้าง Part ใหม่
@@ -582,6 +584,7 @@ end
 
 -- ฟังก์ชันที่ใช้ในการเปลี่ยน CFrame
 local function changeCFrame(position, rotation)
+    if not enabled then return end  -- หยุดทำงานถ้า Toggle ถูกปิด
     player.Character:SetPrimaryPartCFrame(CFrame.new(position, rotation))
 end
 
@@ -597,26 +600,18 @@ end
 
 -- ฟังก์ชันการตั้งค่า Sniper
 local function equipSniper()
-    local args = {
-        [1] = "Sniper"
-    }
-
+    if not enabled then return end  -- หยุดทำงานถ้า Toggle ถูกปิด
+    local args = { [1] = "Sniper" }
     local success, message = pcall(function()
-        -- รันคำสั่ง Remote เพื่อติดตั้ง Sniper
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
     end)
 
     if success then
         print("Sniper ถูกติดตั้งเรียบร้อยแล้ว!")
-
-        -- รอให้ Sniper เข้ามาใน Backpack
-        local sniper = player.Backpack:WaitForChild("Sniper", 5)  -- รอไม่เกิน 5 วินาทีให้ Sniper มาใน Backpack
-
+        local sniper = player.Backpack:WaitForChild("Sniper", 5)
         if sniper then
-            -- ย้าย Sniper ไปที่ตัวละคร
             sniper.Parent = player.Character
-            sniper.Handle.CFrame = player.Character.HumanoidRootPart.CFrame  -- ทำการย้ายให้ตรงกับตำแหน่งของตัวละคร
-
+            sniper.Handle.CFrame = player.Character.HumanoidRootPart.CFrame
             print("Sniper ถูกย้ายไปที่ตัวละครแล้ว!")
         else
             print("ไม่พบ Sniper ใน Backpack")
@@ -628,32 +623,15 @@ end
 
 -- ฟังก์ชันการโจมตีสิ่งที่ชื่อว่า Zombie, Boss หรือ Summon
 local function attackZombieBossSummonObjects()
-    -- ลูปตรวจสอบทุกๆ object ใน LivingThings
     for _, object in pairs(workspace.LivingThings:GetChildren()) do
-        -- ตรวจสอบว่า object มีคำว่า "Zombie", "Boss", หรือ "Summon" ในชื่อ
-        if (string.match(object.Name, "Zombie") or string.match(object.Name, "Boss") or string.match(object.Name, "Summon")) then
-            -- ตรวจสอบว่า object มี HumanoidRootPart
+        if not enabled then return end  -- หยุดทำงานถ้า Toggle ถูกปิด
+        if string.match(object.Name, "Zombie") or string.match(object.Name, "Boss") or string.match(object.Name, "Summon") then
             if object:FindFirstChild("HumanoidRootPart") then
-                -- คำนวณระยะห่างระหว่าง player กับ object
                 local distance = (player.Character.HumanoidRootPart.Position - object.HumanoidRootPart.Position).magnitude
-
-                -- ถ้าระยะห่างน้อยกว่า 50 หน่วย (สามารถปรับระยะห่างได้)
                 if distance < 200 then
-                    print("กำลังกกระทำการยิงใส่: " .. object.Name)
-
-                    -- ส่งคำสั่งยิงไปที่ object
-                    local args = {
-                        [1] = "GUN_DAMAGE",
-                        [2] = object
-                    }
-
-                    -- ส่งคำสั่งไปยัง remote
+                    local args = { [1] = "GUN_DAMAGE", [2] = object }
                     game:GetService("ReplicatedStorage"):WaitForChild("NetworkEvents"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
-
-                    -- หน่วงเวลา 0.1 วินาทีก่อนยิงครั้งที่สอง
                     wait(0.1)
-
-                    -- ส่งคำสั่งยิงอีกครั้ง
                     game:GetService("ReplicatedStorage"):WaitForChild("NetworkEvents"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
                 end
             end
@@ -663,58 +641,45 @@ end
 
 -- ฟังก์ชันหลักสำหรับการรันสคริปต์แรก
 local function runScript()
-    -- สร้าง Part ก่อนที่จะเริ่มทำงานของสคริปต์
     createPart()
-
-    -- รอ 0.5 วินาทีให้ Part ถูกสร้างก่อน
     wait(0.5)
 
-    -- รอให้ remotes ถูกโหลด
     local remotes = replicatedStorage:WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("Necro"):WaitForChild("AbilityPlayer")
 
-    -- เปลี่ยน CFrame ไปยังตำแหน่งแรก
     changeCFrame(Vector3.new(24.6698666, -13.1000013, 172.747742), Vector3.new(-0.0788495094, -1.01406613e-07, -0.996886551))
-
-    -- รันคำสั่ง FireServer() 30 ครั้ง
     for i = 1, 30 do
+        if not enabled then return end  -- หยุดทำงานถ้า Toggle ถูกปิด
         wait(0)
         remotes:FireServer()
     end
 
-    -- เปลี่ยน CFrame ไปยังตำแหน่งที่สอง
     changeCFrame(Vector3.new(-53.2435837, -13.0705996, 171.227142), Vector3.new(0.0195127167, -6.86802366e-08, 0.999809623))
 
-    -- รอจนกว่า "Summonarm17966" จะหายไปจาก LivingThings
-    while checkIfSummonarmExists() do
-        wait(0.5)  -- รอ 0.5 วินาทีเพื่อตรวจสอบอีกครั้ง
+    while enabled and checkIfSummonarmExists() do
+        wait(0.5)
     end
 
-    -- เมื่อ "Summonarm17966" หายไปแล้ว ให้เริ่มต้นใหม่
-    print("Summonarm17966 has disappeared. Restarting the script.")
-    runScript()  -- เรียกฟังก์ชันนี้ใหม่เพื่อเริ่มต้นสคริปต์ใหม่
+    if enabled then
+        print("Summonarm17966 has disappeared. Restarting the script.")
+        runScript()
+    end
 end
 
--- ฟังก์ชันหลักที่รวมทั้งสองสคริปต์
+-- ฟังก์ชันรวมที่รันทุกส่วนพร้อมกัน
 local function combinedRun()
-    -- เรียกฟังก์ชัน Sniper ก่อน
     equipSniper()
-
-    -- เริ่มทำงานของสคริปต์แรก (runScript)
     task.spawn(function()
-        runScript()  -- เรียกฟังก์ชันของสคริปต์แรก
+        runScript()
     end)
-
-    -- เริ่มการโจมตี NPC พร้อมกัน
     task.spawn(function()
         while enabled do
-            attackZombieBossSummonObjects()  -- เรียกฟังก์ชันโจมตี
-            wait(0.1)  -- หน่วงเวลา 0.1 วินาที
+            attackZombieBossSummonObjects()
+            wait(0.1)
         end
     end)
 end
 
 -- ฟังก์ชันการเปิด/ปิด Toggle
-local enabled = false
 local function toggle()
     enabled = not enabled
     if enabled then
@@ -724,8 +689,6 @@ local function toggle()
             Duration = 6.5,
             Image = 4483362458,
         })
-
-        -- เรียกฟังก์ชัน combinedRun เพื่อให้ทั้งสองสคริปต์ทำงานพร้อมกัน
         combinedRun()
     else
         Rayfield:Notify({
@@ -741,9 +704,9 @@ end
 local Toggle = Tab:CreateToggle({
     Name = "ออโต้ฟาม Kills",
     CurrentValue = false,
-    Flag = "Toggle1",  -- Flag สำหรับการจัดการค่าต่างๆ
+    Flag = "Toggle1",
     Callback = function(Value)
-        toggle()  -- เรียกฟังก์ชัน toggle
+        toggle()
     end,
 })
 
@@ -1010,7 +973,7 @@ end)
 
 -- การสร้าง Toggle ใน UI
 local Toggle = Tab:CreateToggle({
-    Name = "จอขาว(เหมาะสำหรับ Crash Server)",  -- ชื่อ Toggle ที่จะแสดงใน UI
+    Name = "จอขาว(เหมาะสำหรับ Crash Server/ออโต้ฟาม)",  -- ชื่อ Toggle ที่จะแสดงใน UI
     CurrentValue = false,  -- เริ่มต้น Toggle ปิด
     Flag = "ToggleWhiteScreen",  -- Flag สำหรับการจัดการค่าต่างๆ ใน config file
     Callback = function(Value)
