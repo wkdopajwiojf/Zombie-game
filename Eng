@@ -553,10 +553,77 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 
--- สร้าง Tab สำหรับ Language
+local Tab = Window:CreateTab("Setting⚙️", nil)
+local Section = Tab:CreateSection("Setting")
+
+local UserInputService = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+local whiteScreen = Instance.new("Frame")
+
+-- ตั้งค่า screenGui และ whiteScreen
+screenGui.Parent = player.PlayerGui
+whiteScreen.Size = UDim2.new(1, 0, 1, 0)  -- ครอบคลุมทั้งหน้าจอ
+whiteScreen.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- สีขาว
+whiteScreen.BackgroundTransparency = 0  -- ไม่โปร่งใส
+whiteScreen.Visible = false  -- เริ่มต้นไม่แสดง
+
+whiteScreen.Parent = screenGui
+
+-- ฟังก์ชันในการเปิดและปิดหน้าจอขาว
+local function toggleWhiteScreen()
+    whiteScreen.Visible = not whiteScreen.Visible  -- สลับการแสดงผล
+end
+
+-- ฟังก์ชันสำหรับแสดง Notify
+local function showNotify(title, content)
+    Rayfield:Notify({
+        Title = title,
+        Content = content,
+        Duration = 3,  -- ระยะเวลาแสดง Notify 3 วินาที
+        Image = 4483362458,
+    })
+end
+
+-- การเชื่อมต่อกับการกดปุ่ม
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if not gameProcessedEvent then  -- ตรวจสอบว่าเกมไม่ได้ใช้ปุ่มนี้อยู่
+        if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.P then
+            toggleWhiteScreen()  -- เรียกใช้ฟังก์ชันเมื่อกด P
+        end
+    end
+end)
+
+-- การสร้าง Toggle ใน UI
+local Toggle = Tab:CreateToggle({
+    Name = "White screen (suitable for Server Crash)",  -- ชื่อ Toggle ที่จะแสดงใน UI
+    CurrentValue = false,  -- เริ่มต้น Toggle ปิด
+    Flag = "ToggleWhiteScreen",  -- Flag สำหรับการจัดการค่าต่างๆ ใน config file
+    Callback = function(Value)
+        if Value then
+            -- ถ้าเปิด Toggle
+            print("Fuck You")
+
+            -- แสดง Notify เมื่อเปิด
+            showNotify("White Screen Actived", "White Screen Actived!")
+
+            -- เปิดหน้าจอขาว
+            toggleWhiteScreen()
+        else
+            -- ถ้าปิด Toggle
+            print("Toggle ปิดแล้ว")
+
+            -- แสดง Notify เมื่อปิด
+            showNotify("White Screen Deactived", "White Screen Deactived")
+
+            -- ปิดหน้าจอขาว
+            toggleWhiteScreen()
+        end
+    end,
+})
+
 local Tab = Window:CreateTab("Language🔠", nil) -- "Language"
 local Section = Tab:CreateSection("Language") -- "Language"
-
 local Button = Tab:CreateButton({
    Name = "Thai Language",
    Callback = function()
