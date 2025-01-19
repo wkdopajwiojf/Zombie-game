@@ -1306,15 +1306,6 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
-local Tab = Window:CreateTab("Language🔠", nil) -- "Language"
-local Section = Tab:CreateSection("Language") -- "Language"
-local Button = Tab:CreateButton({
-   Name = "Thai Language",
-   Callback = function()
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/wkdopajwiojf/Zombie-game/refs/heads/main/Thai-Script"))()
-   end  -- ปิด Callback
-})  -- ปิด Button
-
 Rayfield:Notify({
    Title = "Hello",
    Content = "Thank you for using it",
