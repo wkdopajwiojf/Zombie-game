@@ -791,7 +791,7 @@ end)
 -----------------------------------------------------------------------
 local Section = Tab:CreateSection("Idk funtion Ver.5")
 -----------------------------------------------------------------------
---- ตัวแปรหลัก
+-- ตัวแปรหลัก
 local player = game.Players.LocalPlayer
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local livingThings = game.Workspace:WaitForChild("LivingThings")  -- โฟลเดอร์ LivingThings
@@ -806,7 +806,7 @@ local function createPart()
     part.CFrame = CFrame.new(-53, -17.2714882, 170.868057)  -- กำหนด CFrame
     part.Anchored = true  -- ทำให้ Part ไม่เคลื่อนที่
     part.Parent = game.Workspace  -- วาง Part ใน Workspace
-    print("Part ถูกสร้างเรียบร้อยแล้ว")
+    print("Part ถูกสร้างเรียบร้อยแล้ว!")
 end
 
 -- ฟังก์ชันที่ตรวจสอบว่ามี Object ที่มีคำว่า "Summon" อยู่ใน workspace.LivingThings หรือไม่
@@ -830,23 +830,23 @@ local function equipSniper()
     end)
 
     if success then
-        print("Sniper")
+        print("Sniper ถูกติดตั้งเรียบร้อยแล้ว!")
 
         local sniper = player.Backpack:WaitForChild("Sniper", 5)  -- รอไม่เกิน 5 วินาทีให้ Sniper มาใน Backpack
 
         if sniper then
             sniper.Parent = player.Character
             sniper.Handle.CFrame = player.Character.HumanoidRootPart.CFrame
-            print("Sniper mOVE")
+            print("Sniper ถูกย้ายไปที่ตัวละครแล้ว!")
         else
-            print("ไม่รู้เจอ SNiper")
+            print("ไม่พบ Sniper ใน Backpack")
         end
     else
-        print("error Sniper: " .. message)
+        print("เกิดข้อผิดพลาดในการติดตั้ง Sniper: " .. message)
     end
 end
 
--- ฟังก์ชันการโจมตีสิ่งที่ชื่อว่า Zombie, Boss หรือ Summon
+-- ฟังก์ชันสำหรับการโจมตีสิ่งที่ชื่อว่า Zombie, Boss หรือ Summon
 local function attackZombieBossSummonObjects()
     for _, object in pairs(livingThings:GetChildren()) do
         if string.find(object.Name, "Zombie") or string.find(object.Name, "Boss") or string.find(object.Name, "Summon") then
@@ -854,7 +854,7 @@ local function attackZombieBossSummonObjects()
                 local distance = (player.Character.HumanoidRootPart.Position - object.HumanoidRootPart.Position).magnitude
 
                 if distance < 200 then
-                    print("ATTACK: " .. object.Name)
+                    print("กำลังยิงใส่: " .. object.Name)
 
                     local args = {
                         [1] = "GUN_DAMAGE",
@@ -870,29 +870,87 @@ local function attackZombieBossSummonObjects()
     end
 end
 
+-- ฟังก์ชันการโจมตีผู้เล่นในทีม Zombie
+local function attackZombiePlayers()
+    local closestPlayer = nil
+    local shortestDistance = math.huge  -- ค่าเริ่มต้นระยะทางที่ไม่จำกัด
+    local zombieTeam = game.Teams:FindFirstChild("Zombie")  -- ตรวจสอบทีมที่ชื่อ "Zombie" ในเกม
+
+    -- ลูปตรวจสอบผู้เล่นทุกคนในเกม
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        -- ตรวจสอบว่าผู้เล่นไม่ใช่ตัวเอง
+        if otherPlayer ~= player then
+            local character = otherPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                -- คำนวณระยะทางระหว่างตัวเราและผู้เล่น
+                local distance = (player.Character.HumanoidRootPart.Position - character.HumanoidRootPart.Position).magnitude
+
+                -- ตรวจสอบว่าผู้เล่นอยู่ในทีม Zombie หรือไม่
+                if otherPlayer.Team == zombieTeam then
+                    -- ถ้าผู้เล่นอยู่ในทีม Zombie และเป็นผู้เล่นที่ใกล้ที่สุด
+                    if distance < shortestDistance then
+                        shortestDistance = distance
+                        closestPlayer = otherPlayer
+                    end
+                end
+            end
+        end
+    end
+
+    -- ถ้ามีผู้เล่นในทีม Zombie ใกล้ที่สุด, โจมตี
+    if closestPlayer then
+        print("ATTACK หำเสียดาก: " .. closestPlayer.Name)  -- พิมพ์ชื่อผู้เล่นที่กำลังโจมตี
+        local args = {
+            [1] = "GUN_DAMAGE",
+            [2] = closestPlayer.Character -- ส่งคำสั่งไปยังตัวละครของผู้เล่นใกล้ที่สุด
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("NetworkEvents"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+    end
+end
+
 -- ฟังก์ชันหลักสำหรับการทำงาน
 local function runScript()
     createPart() -- สร้าง Part ก่อนเริ่มการทำงาน
 
-    local remotes = replicatedStorage:WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("Necro"):WaitForChild("AbilityPlayer")
+    equipSniper() -- ติดตั้ง Sniper
 
+    -- วาปไปยังตำแหน่งแรก
     player.Character:SetPrimaryPartCFrame(CFrame.new(24.6698666, -13.1000013, 172.747742))
 
+    -- รัน Remote Ability 30 ครั้ง
+    local remotes = replicatedStorage:WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("Necro"):WaitForChild("AbilityPlayer")
     for i = 1, 30 do
         if not enabled then return end
-        wait(0)
         remotes:FireServer()
+        wait(0)
     end
 
-    player.Character:SetPrimaryPartCFrame(CFrame.new(-53.2435837, -13.0705996, 171.227142))
+    -- วาปไปยังตำแหน่งที่สอง
+    player.Character:SetPrimaryPartCFrame(CFrame.new(-53.1791, -13.7714891, 170.809448, 0.997564018, -1.94691321e-08, -0.0697569549, 2.16139568e-08, 1, 2.99923215e-08, 0.0697569549, -3.14269855e-08, 0.997564018))
 
-    while enabled and checkIfSummonExists() do
-        wait(0.5)
-    end
+    -- วนตรวจสอบและโจมตี
+    while enabled do
+        attackZombieBossSummonObjects() -- โจมตีเป้าหมาย
+        attackZombiePlayers()  -- โจมตีผู้เล่นในทีม Zombie
 
-    if enabled then
-        print(".")
-        runScript()
+        if not checkIfSummonExists() then
+            print("ไม่มี Summon เหลืออยู่ กำลังย้อนกลับไปที่ขั้นตอนที่ 3...")
+            -- วาปกลับไปยังตำแหน่งแรก
+            player.Character:SetPrimaryPartCFrame(CFrame.new(24.6698666, -13.1000013, 172.747742))
+
+            -- รัน Remote Ability 30 ครั้ง
+            for i = 1, 30 do
+                if not enabled then return end
+                remotes:FireServer()
+                wait(0)
+            end
+
+            -- วาปไปยังตำแหน่งที่สองใหม่
+            player.Character:SetPrimaryPartCFrame(CFrame.new(-53.1791, -13.7714891, 170.809448, 0.997564018, -1.94691321e-08, -0.0697569549, 2.16139568e-08, 1, 2.99923215e-08, 0.0697569549, -3.14269855e-08, 0.997564018))
+
+        else
+            wait(0.5)  -- รอครึ่งวินาที ก่อนทำการโจมตีต่อ
+        end
     end
 end
 
@@ -901,26 +959,17 @@ local function toggle()
     enabled = not enabled
     if enabled then
         Rayfield:Notify({
-            Title = "Script Activated",
-            Content = "The script has been turned off!",
+            Title = "สคริปต์เปิดใช้งาน",
+            Content = "สคริปต์การโจมตีเปิดการใช้งานแล้ว!",
             Duration = 6.5,
             Image = 4483362458,
         })
 
-        equipSniper()
-
-        task.spawn(function()
-            while enabled do
-                attackZombieBossSummonObjects()
-                wait(0.1)
-            end
-        end)
-
         task.spawn(runScript)
     else
         Rayfield:Notify({
-            Title = "Script Activated",
-            Content = "The script is running!",
+            Title = "สคริปต์ปิดใช้งาน",
+            Content = "สคริปต์การโจมตีปิดการใช้งานแล้ว!",
             Duration = 6.5,
             Image = 4483362458,
         })
@@ -929,7 +978,7 @@ end
 
 -- ปุ่ม UI สำหรับเปิด/ปิดสคริปต์
 local Toggle = Tab:CreateToggle({
-    Name = "Auto farm kills",
+    Name = "ออโต้ฟาม & โจมตีผู้เล่น Zombie",
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
@@ -937,6 +986,7 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
+--------------------------------------------------------------------
 local Tab = Window:CreateTab("Item Giver🔫", nil) -- Title, Image
 local Section = Tab:CreateSection("Idk.1")
 --------------------------------------------------------------------
