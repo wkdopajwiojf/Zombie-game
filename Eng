@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Zombie game [upd3] Script🤡",
+   Name = "Zombie game [upd3] Script V1.1🤡",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Zombie game [upd3]",
    LoadingSubtitle = "Script By Arisa Mihai",
@@ -35,8 +35,149 @@ local Window = Rayfield:CreateWindow({
 })
 
 local Tab = Window:CreateTab("Fuck my pussy💦", nil) -- "F**k me"
-local Section = Tab:CreateSection("Idk funtion") -- "I don't know the function, I don't want to name it"
+local Section = Tab:CreateSection("Acid aura") -- "I don't know the function, I don't want to name it"
+-----------------------------------------------------------------------------------------------
+-- Starting values
+local radius = 200
+local numShots = 500
+local maxRadius = 200
+local maxNumShots = 10000
 
+-- Toggle to enable/disable the script
+local enabled = false
+
+local canShoot = true  -- Add a flag to control the shooting rate
+
+local function updateScriptPosition()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()  -- Wait for character to load
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")  -- Wait for HumanoidRootPart to load
+
+    for i = 1, numShots do
+        if not enabled then
+            break  -- Exit the loop if the script is disabled
+        end
+        
+        -- Randomly generate x, y, z offset within a range
+        local randomOffset = Vector3.new(
+            math.random(-radius, radius),  -- Random x within range
+            math.random(-radius, radius),  -- Random y within range (optional for height)
+            math.random(-radius, radius)   -- Random z within range
+        )
+        
+        local targetPosition = humanoidRootPart.Position + randomOffset
+
+        local args = {
+            [1] = targetPosition,
+            [2] = targetPosition + Vector3.new(0, 0, 0)
+        }
+
+        -- Fire the Remote
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("AcidSpit"):FireServer(unpack(args))
+
+        task.wait(0)  -- Adjust this value to make the shots faster (lower value = faster)
+    end
+end
+
+local function toggle()
+    enabled = not enabled
+    if enabled then
+        print("Esas")
+        -- แจ้งเตือนเมื่อเปิด
+        Rayfield:Notify({
+            Title = "Script Enabled",
+            Content = "The script is now running.",
+            Duration = 6.5,
+            Image = 4483362458,
+        })
+    else
+        print("coff!")
+        -- แจ้งเตือนเมื่อปิด
+        Rayfield:Notify({
+            Title = "Script Disabled",
+            Content = "The script has been disabled.",
+            Duration = 6.5,
+            Image = 4483362458,
+        })
+    end
+end
+
+-- Loop to update and shoot (continually checks if enabled)
+task.spawn(function()
+    while true do
+        if enabled then
+            updateScriptPosition()
+        end
+        task.wait(0)  -- Wait for 2 seconds before next action (can adjust as needed)
+    end
+end)
+
+-- Listen for character respawn (to ensure the script works after death)
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+    print("CE")
+    if enabled then
+        updateScriptPosition()  -- Call the function again when character respawns
+    end
+end)
+
+-- UI Elements for radius and numShots
+local Slider = Tab:CreateSlider({
+    Name = "Radius",
+    Range = {0, maxRadius},
+    Increment = 10,
+    Suffix = "Range",
+    CurrentValue = radius,
+    Flag = "Slider1", 
+    Callback = function(Value)
+        radius = Value
+        print("etoe: " .. radius)
+    end,
+})
+
+local SliderNumShots = Tab:CreateSlider({
+    Name = "Number of Shots",
+    Range = {0, maxNumShots},
+    Increment = 10,
+    Suffix = "Shots",
+    CurrentValue = numShots,
+    Flag = "Slider2", 
+    Callback = function(Value)
+        numShots = Value
+        print("rtor: " .. numShots)
+    end,
+})
+
+local Toggle = Tab:CreateToggle({
+    Name = "Acid aura",
+    CurrentValue = enabled,
+    Flag = "Toggle1", 
+    Callback = function(Value)
+        enabled = Value
+        if enabled then
+            print("runnin!")
+            -- แจ้งเตือนเมื่อเปิด
+            Rayfield:Notify({
+                Title = "Script Activated",
+                Content = "The script is running!",
+                Duration = 6.5,
+                Image = 4483362458,
+            })
+        else
+            print("coff7")
+            -- แจ้งเตือนเมื่อปิด
+            Rayfield:Notify({
+                Title = "Script Deactivated",
+                Content = "The script has been turned off!",
+                Duration = 6.5,
+                Image = 4483362458,
+            })
+        end
+    end,
+})
+
+-----------------------------------------------------------------------------------------------
+local Section = Tab:CreateSection("Idk But its acid")
+-----------------------------------------------------------------------------------------------
 -- Starting values
 local radius = 3
 local numShots = 10
@@ -91,27 +232,27 @@ local function updateScriptPosition()
     end
 end
 
-local function toggle()
-    enabled = not enabled
-    if enabled then
-        Rayfield:Notify({
-            Title = "Script Activated",
-            Content = "The script is running!",
-            Duration = 3
-        })
-    else
-        Rayfield:Notify({
-            Title = "Script Deactivated",
-            Content = "The script has been turned off!",
-            Duration = 3
-        })
-    end
-end
-
--- Button to toggle script on/off
-Tab:CreateButton({
-    Name = "Open/off",
-    Callback = toggle
+-- Toggle to enable/disable script
+local Toggle = Tab:CreateToggle({
+    Name = "Toggle Script",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag to uniquely identify this toggle
+    Callback = function(Value)
+        enabled = Value
+        if enabled then
+            Rayfield:Notify({
+                Title = "Script Activated",
+                Content = "The script is running!",
+                Duration = 3
+            })
+        else
+            Rayfield:Notify({
+                Title = "Script Deactivated",
+                Content = "The script has been turned off!",
+                Duration = 3
+            })
+        end
+    end,
 })
 
 -- Loop to update and shoot
@@ -123,6 +264,7 @@ task.spawn(function()
         task.wait(2)
     end
 end)
+
 ------------------------------------------------------------------------
 local Section = Tab:CreateSection("Idk funtion Ver.2") -- "I don't know the function, I don't want to name it round two"
 ------------------------------------------------------------------------
@@ -341,6 +483,90 @@ local Toggle = Tab:CreateToggle({
         toggle()  -- เรียกฟังก์ชัน toggle
     end,
 })
+
+----------------------------------------------------------------------
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local ZombieRelated = Remotes:WaitForChild("ZombieRelated")
+local PlayerAttack = ZombieRelated:WaitForChild("PlayerAttack")
+
+local attacking = false -- ตัวแปรสถานะการโจมตี
+
+-- ฟังก์ชันค้นหาผู้เล่นที่ใกล้ที่สุดในทีม Human
+local function getClosestHuman()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= Players.LocalPlayer -- ไม่ตรวจจับ LocalPlayer
+            and player.Team and player.Team.Name == "Human" 
+            and player.Character and player.Character:FindFirstChild("Head") then
+
+            local distance = (player.Character.Head.Position - Players.LocalPlayer.Character.Head.Position).Magnitude
+            if distance < shortestDistance then
+                closestPlayer = player
+                shortestDistance = distance
+            end
+        end
+    end
+
+    return closestPlayer
+end
+
+-- สร้าง Toggle UI สำหรับเปิด/ปิดการโจมตี
+local Toggle = Tab:CreateToggle({
+    Name = "Inject aura",
+    CurrentValue = false,
+    Flag = "ToggleAttack",
+    Callback = function(Value)
+        attacking = Value -- เปลี่ยนสถานะการโจมตีตามค่าของ Toggle
+        if attacking then
+            print("เปริด")
+        else
+            print("ปิด")
+        end
+    end,
+})
+
+-- ลูปตรวจสอบและโจมตี
+task.spawn(function()
+    while true do
+        if attacking then
+            local target = getClosestHuman()
+
+            if target then
+                print("กำลังแทงรู Ass ของ:", target.Name)
+
+                while attacking and target and target.Team and target.Team.Name == "Human" 
+                    and target.Character and target.Character:FindFirstChild("Head") do
+                    
+                    -- คำนวณเป้าหมายใหม่
+                    local closestTarget = getClosestHuman()
+
+                    if closestTarget and closestTarget ~= target then
+                        print("เปลี่ยนหัว:", closestTarget.Name)
+                        target = closestTarget
+                    end
+
+                    -- รันคำสั่งโจมตี
+                    local args = {
+                        [1] = target.Character.Head
+                    }
+                    PlayerAttack:InvokeServer(unpack(args))
+                    print("กำลังแอ็คแท็กกะระแก็กกุ๊กกั๊ก:", target.Name)
+                end
+
+                print("เป้าหมาย", target.Name, "เปลี่ยนทรีมหรือไมร่ใชร่เปล้าหมาย")
+            else
+                print("หาคนใน Human ไม่เจอไอสัส")
+            end
+        end
+        task.wait(0) -- ตรวจสอบใหม่ทันที
+    end
+end)
 
 ----------------------------------------------------------------------
 -- สถานะการเปิด/ปิด
@@ -711,8 +937,77 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
+local Tab = Window:CreateTab("Item Giver🔫", nil) -- Title, Image
+local Section = Tab:CreateSection("Idk.1")
 --------------------------------------------------------------------
-local Tab = Window:CreateTab("Item Giver🔫", nil) -- "Spawn Items"
+local Toggle = Tab:CreateToggle({
+   Name = "Auto Rainbow Potion",
+   CurrentValue = false,
+   Flag = "ToggleRainbowPotion", -- ให้ใช้ Flag ที่ไม่ซ้ำกับที่ใช้ในส่วนอื่น
+   Callback = function(Value)
+      if Value then
+         -- เมื่อเปิด toggle (Value เป็น true) ให้เริ่มทำงาน
+         print("เริ่มกด Rainbow Potion รัวๆ")
+         _G.RainbowPotionInProgress = true
+
+         -- เริ่มรันการกด Rainbow Potion รัวๆ
+         while _G.RainbowPotionInProgress do
+            -- ตรวจสอบว่า Object ที่ต้องการอยู่ใน Workspace หรือไม่
+            local rainbowPotion = workspace:WaitForChild("Interaction")
+               :WaitForChild("ToolGivers")
+               :WaitForChild("Rainbow Potion")
+               :WaitForChild("ClickDetector")
+               
+            -- ทำการคลิกที่ ClickDetector
+            fireclickdetector(rainbowPotion)
+            print("D= 1 a+ 1")
+
+            -- หน่วงเวลา 0.1 วินาทีระหว่างการกด
+            wait(0.1)
+         end
+      else
+         -- เมื่อปิด toggle (Value เป็น false) ให้หยุดการกด
+         print("หยุดการกดd= Potion")
+         _G.RainbowPotionInProgress = false
+      end
+   end,
+})
+
+--------------------------------------------------------------------
+local Toggle = Tab:CreateToggle({
+   Name = "Auto Antidote",
+   CurrentValue = false,
+   Flag = "ToggleAntidote", -- ให้ใช้ Flag ที่ไม่ซ้ำกับที่ใช้ในส่วนอื่น
+   Callback = function(Value)
+      if Value then
+         -- เมื่อเปิด toggle (Value เป็น true) ให้เริ่มทำงาน
+         print("เริ่มกด Antidote รัวๆ")
+         _G.AntidoteInProgress = true
+
+         -- เริ่มรันการกด Antidote รัวๆ
+         while _G.AntidoteInProgress do
+            -- ตรวจสอบว่า Object ที่ต้องการอยู่ใน Workspace หรือไม่
+            local antidote = workspace:WaitForChild("Interaction")
+               :WaitForChild("ToolGivers")
+               :WaitForChild("Antidote")
+               :WaitForChild("ClickDetector")
+               
+            -- ทำการคลิกที่ ClickDetector
+            fireclickdetector(antidote)
+            print("กด Antidote")
+
+            -- หน่วงเวลา 0.1 วินาทีระหว่างการกด
+            wait(0.1)
+         end
+      else
+         -- เมื่อปิด toggle (Value เป็น false) ให้หยุดการกด
+         print("หยุดการกด Antidote")
+         _G.AntidoteInProgress = false
+      end
+   end,
+})
+
+---------------------------------------------------------
 local Section = Tab:CreateSection("Spawn Cool Items")
 local Button = Tab:CreateButton({
    Name = "Wooden Bat",
