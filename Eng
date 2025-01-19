@@ -959,8 +959,8 @@ local function toggle()
     enabled = not enabled
     if enabled then
         Rayfield:Notify({
-            Title = "สคริปต์เปิดใช้งาน",
-            Content = "สคริปต์การโจมตีเปิดการใช้งานแล้ว!",
+            Title = "Activeted",
+            Content = "!",
             Duration = 6.5,
             Image = 4483362458,
         })
@@ -968,8 +968,8 @@ local function toggle()
         task.spawn(runScript)
     else
         Rayfield:Notify({
-            Title = "สคริปต์ปิดใช้งาน",
-            Content = "สคริปต์การโจมตีปิดการใช้งานแล้ว!",
+            Title = "Deactivated",
+            Content = "!",
             Duration = 6.5,
             Image = 4483362458,
         })
@@ -978,7 +978,7 @@ end
 
 -- ปุ่ม UI สำหรับเปิด/ปิดสคริปต์
 local Toggle = Tab:CreateToggle({
-    Name = "ออโต้ฟาม & โจมตีผู้เล่น Zombie",
+    Name = "้Auto farm kills",
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
