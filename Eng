@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Zombie game [upd3] Script V1.1🤡",
+   Name = "Zombie game [upd3] Script V1.102 (FIXED BUG) 🤡",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Zombie game [upd3]",
    LoadingSubtitle = "Script By Arisa Mihai",
@@ -372,7 +372,7 @@ end
 
 -- ปุ่ม UI สำหรับเปิด/ปิดสคริปต์
 local Toggle = Tab:CreateToggle({
-    Name = "Kill all zombieNpc",
+    Name = "Kill all zombieNpc (Hold Sniper)",
     CurrentValue = false,
     Flag = "Toggle1",  -- Flag สำหรับการจัดการค่าต่างๆ
     Callback = function(Value)
@@ -476,7 +476,7 @@ end
 
 -- ปุ่ม UI สำหรับเปิด/ปิดสคริปต์
 local Toggle = Tab:CreateToggle({
-    Name = "Kill all zombie player",
+    Name = "Kill all zombie player (Hold Sniper)",
     CurrentValue = false,
     Flag = "Toggle1",  -- Flag สำหรับการจัดการค่าต่างๆ
     Callback = function(Value)
@@ -978,7 +978,7 @@ end
 
 -- ปุ่ม UI สำหรับเปิด/ปิดสคริปต์
 local Toggle = Tab:CreateToggle({
-    Name = "้Auto farm kills",
+    Name = "้Auto farm kills (Hold Sniper)",
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
