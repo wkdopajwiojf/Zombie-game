@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Zombie game [upd3] Script V1.102 (FIXED BUG) 🤡",
+   Name = "Zombie game [upd3] Script V1.103 (Lazy update) 🤡",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Zombie game [upd3]",
    LoadingSubtitle = "Script By Arisa Mihai",
@@ -1060,7 +1060,7 @@ local Toggle = Tab:CreateToggle({
 ---------------------------------------------------------
 local Section = Tab:CreateSection("Spawn Cool Items")
 local Button = Tab:CreateButton({
-   Name = "Wooden Bat",
+   Name = "1.Wooden Bat",
    Callback = function()
    local args = {
     [1] = "Wooden Bat"
@@ -1071,7 +1071,7 @@ local Button = Tab:CreateButton({
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Katana",
+   Name = "2.Katana",
    Callback = function()
    local args = {
     [1] = "Katana"
@@ -1082,7 +1082,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Frying Pan",
+   Name = "3.Frying Pan",
    Callback = function()
    local args = {
     [1] = "Frying Pan"
@@ -1093,7 +1093,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Fire Axe",
+   Name = "4.Fire Axe",
    Callback = function()
    local args = {
     [1] = "Fire Axe"
@@ -1104,7 +1104,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Machete",
+   Name = "5.Machete",
    Callback = function()
    local args = {
     [1] = "Machete"
@@ -1115,7 +1115,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Pizza Sword",
+   Name = "6.Pizza Sword",
    Callback = function()
    local args = {
     [1] = "Pizza Sword"
@@ -1126,7 +1126,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Shovel",
+   Name = "8.Shovel",
    Callback = function()
    local args = {
     [1] = "Shovel"
@@ -1137,7 +1137,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Classic Sword",
+   Name = "9.Classic Sword",
    Callback = function()
    local args = {
     [1] = "Classic Sword"
@@ -1148,7 +1148,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Bone Sword",
+   Name = "10.Bone Sword",
    Callback = function()
    local args = {
     [1] = "Bone Sword"
@@ -1159,7 +1159,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Charged Bat",
+   Name = "11.Charged Bat",
    Callback = function()
    local args = {
     [1] = "Charged Bat"
@@ -1170,7 +1170,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Firekatana",
+   Name = "12.Firekatana",
    Callback = function()
    local args = {
     [1] = "firekatana"
@@ -1181,7 +1181,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Zombie Club",
+   Name = "13.Zombie Club",
    Callback = function()
    local args = {
     [1] = "Zombie Club"
@@ -1192,14 +1192,14 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Minecraft Sword",
+   Name = "14.Minecraft Sword",
    Callback = function()
    local args = {[1] = "REWARD_IRON"}game:GetService("ReplicatedStorage"):WaitForChild("NetworkEvents"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
 
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Flaming Bat",
+   Name = "15.Flaming Bat",
    Callback = function()
    local args= {
     [1] = "Flaming Bat"
@@ -1210,7 +1210,18 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Frozen Bat",
+   Name = "16.Frozen Katana",
+   Callback = function()
+   local args = {
+    [1] = "Frozen Katana"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon"):InvokeServer(unpack(args))
+
+   end,
+})
+local Button = Tab:CreateButton({
+   Name = "18.Frozen Bat",
    Callback = function()
    local args = {
     [1] = "Frozen Bat"
@@ -1221,7 +1232,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Taser",
+   Name = "19.Taser",
    Callback = function()
    local args = {
     [1] = "Taser"
@@ -1232,7 +1243,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Raygun",
+   Name = "20.Raygun",
    Callback = function()
    local args = {
     [1] = "Raygun"
@@ -1243,7 +1254,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Shotgun",
+   Name = "21.Shotgun",
    Callback = function()
    local args = {
     [1] = "Shotgun"
@@ -1254,7 +1265,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Pistol",
+   Name = "22.Pistol",
    Callback = function()
    local args = {
     [1] = "Pistol"
@@ -1265,7 +1276,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Sniper",
+   Name = "23.Sniper",
    Callback = function()
    local args = {
     [1] = "Sniper"
@@ -1276,7 +1287,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Shop"
    end,
 })
 local Button = Tab:CreateButton({
-   Name = "Landmine(Fixing)",
+   Name = "24.Landmine(❌Patch)",
    Callback = function()
    local args = {
     [1] = "Land mine"
