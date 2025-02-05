@@ -1,11 +1,11 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Zombie game [upd3] Script V1.103 (Lazy update) 🤡",
+   Name = "Zombie game [upd3] Script V1.103 (Script make by arm17966 plZ follow my acc) 🤡",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Zombie game [upd3]",
-   LoadingSubtitle = "Script By Arisa Mihai",
-   Theme = "Serenity", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   LoadingSubtitle = "Script By arm17966",
+   Theme = "DarkBlue", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    DisableRayfieldPrompts = false,
    DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
