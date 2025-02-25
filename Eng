@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Zombie game [upd3] Script V2.000 Script make by WICHAMARN(@Lunarplyr) plZ follow my account 🤡",
+   Name = "Zombie game [upd3] V1.4 Script make by WICHAMARN(@Lunarplyr)🤡",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Zombie game [upd3]",
    LoadingSubtitle = "Script By arm17966",
@@ -796,7 +796,7 @@ task.spawn(function()
                 local buyArgs = { [1] = "Raygun" }
                 ShopRemote:InvokeServer(unpack(buyArgs))
 
-                task.wait(0.05) 
+                task.wait(0.01) 
 
                 local backpack = LocalPlayer:FindFirstChild("Backpack")
                 if backpack then
@@ -807,7 +807,7 @@ task.spawn(function()
                 end
             end
         end
-        task.wait(0.1)
+        task.wait(0.01)
     end
 end)
 
