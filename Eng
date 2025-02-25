@@ -689,7 +689,7 @@ local restrictedSize = restrictedPart.Size
 local isAutoAttackEnabled = false 
 
 local Toggle = Tab:CreateToggle({ 
-   Name = "Raygun aura (When you are on a human team you can attack other humans)",
+   Name = "Raygun aura (When you are on human team you can attack other humans)",
    CurrentValue = false,
    Flag = "AutoAttackToggle",
    Callback = function(Value)
