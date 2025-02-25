@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Zombie game [upd3] Script V1.103 (Script make by arm17966 plZ follow my acc) 🤡",
+   Name = "Zombie game [upd3] Script V2.000 Script make by WICHAMARN(@Lunarplyr) plZ follow my account 🤡",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Zombie game [upd3]",
    LoadingSubtitle = "Script By arm17966",
@@ -675,6 +675,142 @@ task.spawn(function()
         task.wait(0.1) -- รอ 0.1 วินาทีก่อนทำงานใหม่
     end
 end)
+-------------------------------------------------------------------
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local Remotes = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Guns")
+local ShopRemote = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Shop"):WaitForChild("EquipWeapon")
+
+local restrictedPart = workspace.Map:GetChildren()[153] 
+local restrictedCFrame = restrictedPart.CFrame
+local restrictedSize = restrictedPart.Size
+
+local isAutoAttackEnabled = false 
+
+local Toggle = Tab:CreateToggle({ 
+   Name = "Raygun aura (When you are on a human team you can attack other humans)",
+   CurrentValue = false,
+   Flag = "AutoAttackToggle",
+   Callback = function(Value)
+       isAutoAttackEnabled = Value
+   end,
+})
+
+local function isTargetInRestrictedArea(target)
+    if not target or not target.Character or not restrictedPart then return false end
+    local rootPart = target.Character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return false end
+
+    local relativePos = restrictedCFrame:PointToObjectSpace(rootPart.Position)
+    return math.abs(relativePos.X) <= restrictedSize.X / 2 and
+           math.abs(relativePos.Y) <= restrictedSize.Y / 2 and
+           math.abs(relativePos.Z) <= restrictedSize.Z / 2
+end
+
+-- **🔹 ตรวจสอบว่าเป้าหมายตายหรือยัง**
+local function isTargetDead(target)
+    if not target or not target.Character then return true end
+    local humanoid = target.Character:FindFirstChild("Humanoid")
+    return humanoid == nil or humanoid.Health <= 0
+end
+
+local function getClosestValidPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local myCharacter = LocalPlayer.Character
+    if not myCharacter then return nil end
+
+    local myRoot = myCharacter:FindFirstChild("HumanoidRootPart")
+    if not myRoot then return nil end
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local enemyRoot = player.Character:FindFirstChild("HumanoidRootPart")
+            if enemyRoot and not isTargetInRestrictedArea(player) and not isTargetDead(player) then
+                local distance = (myRoot.Position - enemyRoot.Position).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = player
+                end
+            end
+        end
+    end
+
+    return closestPlayer
+end
+
+local function attackTarget(target)
+    if not target or not target.Character then return end
+    local rootPart = target.Character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    -- **🔹 ถ้าเป้าหมายตายแล้ว ให้เปลี่ยนเป้าหมายทันที**
+    if isTargetDead(target) then
+        return
+    end
+
+    print("ATKING:", target.Name) 
+
+    local bulletArgs = {
+        [1] = {
+            [1] = LocalPlayer.Character.HumanoidRootPart.Position,
+            [2] = rootPart.Position
+        },
+        [2] = "Raygun"
+    }
+    Remotes:WaitForChild("ReplicateBullet"):FireServer(unpack(bulletArgs))
+
+    local damageArgs = {
+        [1] = rootPart
+    }
+    Remotes:WaitForChild("Damage"):FireServer(unpack(damageArgs))
+end
+
+task.spawn(function()
+    while true do
+        if isAutoAttackEnabled then
+            local target = getClosestValidPlayer()
+            if target then
+                attackTarget(target)
+            end
+        end
+        task.wait()
+    end
+end)
+
+task.spawn(function()
+    while true do
+        if isAutoAttackEnabled then
+            Remotes:WaitForChild("Reload"):FireServer()
+        end
+        task.wait(0.01)
+    end
+end)
+
+task.spawn(function()
+    while true do
+        if isAutoAttackEnabled then
+            local character = LocalPlayer.Character
+            if character and not character:FindFirstChild("Raygun") then
+                local buyArgs = { [1] = "Raygun" }
+                ShopRemote:InvokeServer(unpack(buyArgs))
+
+                task.wait(0.05) 
+
+                local backpack = LocalPlayer:FindFirstChild("Backpack")
+                if backpack then
+                    local raygun = backpack:FindFirstChild("Raygun")
+                    if raygun then
+                        raygun.Parent = character
+                    end
+                end
+            end
+        end
+        task.wait(0.1)
+    end
+end)
+
 -------------------------------------------------------------------
 local Section = Tab:CreateSection("Idk funtion Ver.3")
 local Button = Tab:CreateButton({
