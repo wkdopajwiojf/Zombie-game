@@ -1,1 +1,7 @@
-loadstring(game:HttpGet('https://raw.githubusercontent.com/wkdopajwiojf/Zombie-game/refs/heads/main/Ban%20land'))()
+print("Checking Banland🔃")
+  task.wait(5)
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/wkdopajwiojf/Zombie-game/refs/heads/main/Ban%20land'))()
+  print("Banland verification completed☑️")
+  
+task.wait(5)
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/wkdopajwiojf/Zombie-game/refs/heads/main/Eng'))()
