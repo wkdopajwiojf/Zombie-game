@@ -1,10 +1,10 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "V1.4 Script make by WICHAMARN(@Lunarplyr)🤡",
+   Name = "V1.5 Script make by WICHAMARN(@Lunarplyr)🤡",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Zombie game [upd3]",
-   LoadingSubtitle = "Script By arm17966",
+   LoadingSubtitle = "Script By Lunarplyr",
    Theme = "DarkBlue", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    DisableRayfieldPrompts = false,
@@ -300,7 +300,7 @@ local function equipSniper()
         print("Error Sniper: " .. message)
     end
 end
-
+--------------------------------------------------------------
 -- ฟังก์ชันการโจมตีสิ่งที่ชื่อว่า Zombie, Boss หรือ Summon
 local function attackZombieBossSummonObjects()
     local player = game.Players.LocalPlayer
@@ -337,7 +337,7 @@ local function attackZombieBossSummonObjects()
         end
     end
 end
-
+--------------------------------------------------------------------
 -- ฟังก์ชันสำหรับการเปิด/ปิด Toggle
 local enabled = false
 local function toggle()
@@ -813,13 +813,63 @@ end)
 
 -------------------------------------------------------------------
 local Section = Tab:CreateSection("Idk funtion Ver.3")
-local Button = Tab:CreateButton({
-   Name = "Summon zombie",
-   Callback = function()
-      game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("Necro"):WaitForChild("AbilityPlayer"):FireServer()
-   end,
+local Input = Tab:CreateInput({
+    Name = "Summon Count ⚠️WARNING⚠️ SHOULD NOT EXCEED 50",
+    CurrentValue = "",
+    PlaceholderText = "Enter number of zombies",
+    RemoveTextAfterFocusLost = false,
+    Flag = "Input1",
+    Callback = function(Text)
+        local number = tonumber(Text)
+        if number and number > 0 then
+            summonCount = number  -- Save inputted number globally
+            Rayfield:Notify({
+                Title = "Success",
+                Content = "Set summon count to " .. number,
+                Duration = 2,
+                Image = 4483362458,
+                Actions = { }
+            })
+        else
+            Rayfield:Notify({
+                Title = "Error",
+                Content = "Please enter a valid number!",
+                Duration = 2,
+                Image = 4483362458,
+                Actions = { }
+            })
+        end
+    end
 })
 
+local Button = Tab:CreateButton({
+    Name = "Summon Zombies",
+    Callback = function()
+        if summonCount > 0 then
+            for i = 1, summonCount do
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ZombieRelated"):WaitForChild("Necro"):WaitForChild("AbilityPlayer"):FireServer()
+                task.wait(0)
+            end
+            Rayfield:Notify({
+                Title = "Summoning...",
+                Content = "Summoned " .. summonCount .. " zombies!",
+                Duration = 2,
+                Image = 4483362458,
+                Actions = { }
+            })
+        else
+            Rayfield:Notify({
+                Title = "Error",
+                Content = "Please set a summon count first!",
+                Duration = 2,
+                Image = 4483362458,
+                Actions = { }
+            })
+        end
+    end
+})
+
+-------------------------------------------------------------
 local Section = Tab:CreateSection("Idk funtion Ver.4")
 local isProcessing = false  -- ตัวแปรเช็คว่าเรากำลังประมวลผลหรือไม่
 local remoteConnection = nil  -- ตัวแปรสำหรับเก็บการเชื่อมต่อ event
@@ -865,7 +915,7 @@ local function createConnection()
         end
     end)
 end
-
+--------------------------------------------------
 local Toggle = Tab:CreateToggle({
     Name = "Bypass Cooldown Sniper(Deving)",  -- ชื่อ Toggle ที่จะแสดงใน UI
     CurrentValue = false,  -- เริ่มต้น Toggle ปิด
