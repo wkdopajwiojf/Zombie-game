@@ -1,0 +1,9 @@
+local player = game:GetService("Players").LocalPlayer
+
+-- รายชื่อ UserId ที่ต้องการแบน
+local bannedUsers = { 2652453850, 1234567890, 9876543210, 1122334455 }
+
+-- ตรวจสอบว่า UserId ของผู้เล่นอยู่ในลิสต์แบนหรือไม่
+if table.find(bannedUsers, player.UserId) then
+    player:Kick("You got banned from the script")
+end
