@@ -1,7 +1,7 @@
 local player = game:GetService("Players").LocalPlayer
 
 -- รายชื่อ UserId ที่ต้องการแบน
-local bannedUsers = { 7889642399, 7948347827, 1076434299, 1122334455 }
+local bannedUsers = { 7889642399, 7948347827, 2652453850, 0 }
 
 -- ตรวจสอบว่า UserId ของผู้เล่นอยู่ในลิสต์แบนหรือไม่
 if table.find(bannedUsers, player.UserId) then
