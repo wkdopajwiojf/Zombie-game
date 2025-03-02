@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 -- รายชื่อ UserId ที่ต้องการแบน
-local bannedUsers = { 7889642399, 7948347827, 6134412567, 0 }
+local bannedUsers = { 7889642399, 7948347827, 6134412567, 1790315511, 0, 0, 0, 0, }
 
 -- ฟังก์ชันปิด Anti-Kick
 local function disableAntiKick()
