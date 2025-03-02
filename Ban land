@@ -1,9 +1,50 @@
-local player = game:GetService("Players").LocalPlayer
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
 -- รายชื่อ UserId ที่ต้องการแบน
 local bannedUsers = { 7889642399, 7948347827, 2652453850, 0 }
 
--- ตรวจสอบว่า UserId ของผู้เล่นอยู่ในลิสต์แบนหรือไม่
-if table.find(bannedUsers, player.UserId) then
-    player:Kick("You got banned from the script🤣🤡")
+-- ฟังก์ชันปิด Anti-Kick
+local function disableAntiKick()
+    local mt = getrawmetatable(game)
+    local oldNamecall = mt.__namecall
+    local oldIndex = mt.__index
+    setreadonly(mt, false)
+
+    -- ปิด Hook __index
+    mt.__index = newcclosure(function(self, method)
+        if self == player and method:lower() == "kick" then
+            return rawget(self, method)
+        end
+        return oldIndex(self, method)
+    end)
+
+    -- ปิด Hook __namecall
+    mt.__namecall = newcclosure(function(self, ...)
+        local method = getnamecallmethod()
+        if self == player and method:lower() == "kick" then
+            return oldNamecall(self, ...)
+        end
+        return oldNamecall(self, ...)
+    end)
+
+    setreadonly(mt, true)
 end
+
+-- ถ้าผู้เล่นอยู่ในลิสต์แบน
+if table.find(bannedUsers, player.UserId) then
+    disableAntiKick() -- ปิด Anti-Kick ก่อน
+    task.wait(0.2) -- รอให้การแก้ไขมีผล
+
+    -- เตะออกซ้ำๆ จนกว่าจะออก
+    while true do
+        player:Kick("You got banned from the script🤣🤡")
+        task.wait(0.1) -- ลดการใช้ CPU
+    end
+
+    -- **ส่งค่า true กลับไปเพื่อบอกว่าโดนแบน**
+    return true
+end
+
+-- **ถ้าไม่โดนแบน ส่งค่า false กลับไป**
+return false
