@@ -18,4 +18,14 @@ if isBanned then
 end
 
 print("Success ✅") -- ถ้าไม่ถูกแบน
-loadstring(game:HttpGet('https://raw.githubusercontent.com/wkdopajwiojf/Backrooms-Drift/refs/heads/main/Script'))()
+
+-- เช็ค ID ของแผนที่
+local mapId = game.PlaceId
+
+if mapId == 138365924124161 then
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/wkdopajwiojf/Backrooms-Drift/refs/heads/main/Script'))()
+elseif mapId == 14419907512 then
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/wkdopajwiojf/Zombie-game/refs/heads/main/Eng'))()
+else
+    print("ไม่พบแผนที่ที่ตรงกับ ID ที่กำหนด")
+end
